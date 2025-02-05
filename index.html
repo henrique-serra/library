@@ -21,30 +21,6 @@
                     <th>Gênero</th>
                     <th>Ações</th>
                 </tr>
-                <tr>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn-primary">Editar</button>
-                            <button class="btn-danger">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>lorem</td>
-                    <td>
-                        <div class="actions">
-                            <button class="btn-primary">Editar</button>
-                            <button class="btn-danger">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
             </table>
         </main>
     </div>
@@ -59,19 +35,19 @@
                     <input type="hidden" id="bookId">
                     <div class="form-group">
                         <label for="title">Título</label>
-                        <input type="text" id="title" required>
+                        <input autofocus type="text" id="title" required class="input">
                     </div>
                     <div class="form-group">
                         <label for="author">Autor</label>
-                        <input type="text" id="author" required>
+                        <input type="text" id="author" required class="input">
                     </div>
                     <div class="form-group">
                         <label for="year">Ano</label>
-                        <input type="number" id="year" required>
+                        <input type="number" id="year" required class="input">
                     </div>
                     <div class="form-group">
                         <label for="genre">Gênero</label>
-                        <select id="genre" required>
+                        <select id="genre" required class="input">
                             <option value="">Selecione um gênero</option>
                             <option value="Ficção">Ficção</option>
                             <option value="Não-Ficção">Não-Ficção</option>
@@ -84,8 +60,8 @@
                         </select>
                     </div>
                     <div class="form-buttons">
-                        <button type="button" class="btn-danger close-modal">Cancelar</button>
-                        <button type="submit" class="btn-success">Salvar</button>
+                        <button class="btn-danger close-modal">Cancelar</button>
+                        <button type="submit" class="btn-success confirm-btn">Salvar</button>
                     </div>
                 </form>
             </div>
