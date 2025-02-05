@@ -14,7 +14,7 @@ const titleInput = document.querySelector("#title");
 const authorInput = document.querySelector("#author");
 const yearInput = document.querySelector("#year");
 const genreInput = document.querySelector("#genre");
-const table = document.querySelector("table");
+const main = document.querySelector("main");
 
 // "Show the dialog" button opens the dialog modally
 addBookBtn.addEventListener("click", () => {
@@ -30,9 +30,7 @@ confirmButton.addEventListener("click", (event) => {
     });
     let newBook = new Book(...returnValue);
     myLibrary.push(newBook);
-    let newBookRow = generateBookRow(newBook);
-    console.log(newBookRow);
-    table.appendChild(newBookRow);
+    generateTable(myLibrary);
     dialog.close(returnValue);
 });
 
@@ -80,6 +78,11 @@ function generateBookRow(book) {
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Excluir";
     deleteButton.classList.add("btn-danger");
+    deleteButton.addEventListener("click", e => {
+        myLibrary.splice(clickedRowIndex, 1);
+        generateTable(myLibrary);
+        return
+    });
 
     actionsDiv.appendChild(editButton);
     actionsDiv.appendChild(deleteButton);
@@ -89,11 +92,54 @@ function generateBookRow(book) {
     return tr;
 }
 
-window.addEventListener("load", e => {
-    if (myLibrary) {
-        myLibrary.forEach(book => {
+function generateTable(library) {
+    main.textContent = "";
+    const newTable = document.createElement("table");
+    const newTr = document.createElement("tr");
+    const newThTitle = document.createElement("th");
+    const newThAuthor = document.createElement("th");
+    const newThYear = document.createElement("th");
+    const newThGenre = document.createElement("th");
+    const newThActions = document.createElement("th");
+
+    newThTitle.textContent = "Título";
+    newThAuthor.textContent = "Autor";
+    newThYear.textContent = "Ano";
+    newThGenre.textContent = "Gênero";
+    newThActions.textContent = "Ações";
+
+    [newThTitle
+    ,newThAuthor
+    ,newThYear
+    ,newThGenre
+    ,newThActions].forEach(th => newTr.appendChild(th));
+
+    newTable.appendChild(newTr);
+
+    if (library) {
+        library.forEach(book => {
             const bookRow = generateBookRow(book);
-            table.appendChild(bookRow);
+            newTable.appendChild(bookRow);
         });
-    };
+        console.log("Rows created");
+    } else console.log("No books in the library");
+
+    main.appendChild(newTable);
+
+    return newTable;
+}
+
+let clickedRowIndex;
+document.addEventListener("click", e => {
+    const actionsDiv = e.target.closest(".actions");
+
+    if (actionsDiv) {
+        const tr = actionsDiv.closest("tr");
+        clickedRowIndex = tr.rowIndex - 1;
+        return clickedRowIndex;
+    }
+})
+
+window.addEventListener("load", e => {
+    generateTable(myLibrary);
 })
