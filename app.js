@@ -15,8 +15,22 @@ const authorInput = document.querySelector("#author");
 const yearInput = document.querySelector("#year");
 const genreInput = document.querySelector("#genre");
 const main = document.querySelector("main");
+const table = document.querySelector("table");
+const tbody = document.querySelector("tbody");
 
-// "Show the dialog" button opens the dialog modally
+// Book constructor
+function Book(title, author, year, genre) {
+    this.title = title;
+    this.author = author;
+    this.year = year;
+    this.genre = genre;
+};
+
+function addBookToLibrary(book) {
+    myLibrary.push(book);
+};
+
+// Show modal when addBookBtn is clicked
 addBookBtn.addEventListener("click", () => {
     form.reset();
     dialog.showModal();
@@ -30,13 +44,9 @@ confirmButton.addEventListener("click", (event) => {
     });
     let newBook = new Book(...returnValue);
     myLibrary.push(newBook);
-    generateTable(myLibrary);
     dialog.close(returnValue);
+    generateTable(myLibrary);
 });
-
-// dialog.addEventListener("close", (e) => {
-//     console.log(dialog.returnValue);
-// });
 
 // "Close" button closes the dialog
 closeButtons.forEach((btn) => {
@@ -46,18 +56,7 @@ closeButtons.forEach((btn) => {
       });
 });
 
-function Book(title, author, year, genre) {
-    this.title = title;
-    this.author = author;
-    this.year = year;
-    this.genre = genre;
-};
-
-function addBookToLibrary(book) {
-    myLibrary.push(book);
-};
-
-function generateBookRow(book) {  
+function generateBookRow(book) {
     const tr = document.createElement("tr");
 
     // Create td for each property
@@ -89,44 +88,19 @@ function generateBookRow(book) {
     actionsTd.appendChild(actionsDiv);
     tr.appendChild(actionsTd);
 
+    // Create td for row index
+    const tdIndex = document.createElement("td");
+    tdIndex.textContent = tr.rowIndex;
+    tr.appendChild(tdIndex);
+
     return tr;
 }
 
-function generateTable(library) {
-    main.textContent = "";
-    const newTable = document.createElement("table");
-    const newTr = document.createElement("tr");
-    const newThTitle = document.createElement("th");
-    const newThAuthor = document.createElement("th");
-    const newThYear = document.createElement("th");
-    const newThGenre = document.createElement("th");
-    const newThActions = document.createElement("th");
-
-    newThTitle.textContent = "Título";
-    newThAuthor.textContent = "Autor";
-    newThYear.textContent = "Ano";
-    newThGenre.textContent = "Gênero";
-    newThActions.textContent = "Ações";
-
-    [newThTitle
-    ,newThAuthor
-    ,newThYear
-    ,newThGenre
-    ,newThActions].forEach(th => newTr.appendChild(th));
-
-    newTable.appendChild(newTr);
-
-    if (library) {
-        library.forEach(book => {
-            const bookRow = generateBookRow(book);
-            newTable.appendChild(bookRow);
-        });
-        console.log("Rows created");
-    } else console.log("No books in the library");
-
-    main.appendChild(newTable);
-
-    return newTable;
+function appendBookRowsToTBody(library, tbody) {
+    library.forEach(book => {
+        const bookRow = generateBookRow(book);
+        tbody.appendChild(bookRow);
+    });
 }
 
 let clickedRowIndex;
@@ -140,6 +114,6 @@ document.addEventListener("click", e => {
     }
 })
 
-window.addEventListener("load", e => {
-    generateTable(myLibrary);
+window.addEventListener("DOMContentLoaded", e => {
+    appendBookRowsToTBody(myLibrary, tbody);
 })
