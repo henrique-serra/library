@@ -16,6 +16,7 @@ const yearInput = document.querySelector("#year");
 const genreInput = document.querySelector("#genre");
 const main = document.querySelector("main");
 const table = document.querySelector("table");
+const readInput = document.querySelector("#read");
 
 // Toggle switch
 const toggle = document.querySelector('.toggle input');
@@ -48,13 +49,13 @@ addBookBtn.addEventListener("click", () => {
     dialog.showModal();
 });
 
-confirmButton.addEventListener("click", function(event) {
+form.addEventListener("submit", function(event) {
     event.preventDefault();
     let returnValue = [];
     inputs.forEach(input => {
-        returnValue.push(input.value);
+        if (input.type !== "checkbox") returnValue.push(input.value);
     });
-    let newBook = new Book(...returnValue);
+    let newBook = new Book(...returnValue, readInput.checked);
     if (editingBook) {
         myLibrary.splice(currentRow.id, 1, newBook);
     } else {
@@ -107,9 +108,9 @@ function generateBookRow(book) {
     editButton.addEventListener("click", function(e) {
         editingBook = true;
         currentRow = this.closest("tr");
-        let [titleTD, authorTD, yearTD, genreTD] = currentRow.querySelectorAll("td");
+        let [titleTD, authorTD, yearTD, genreTD, readTD] = currentRow.querySelectorAll("td");
         // Update form according to the values of the row
-        [titleInput.value, authorInput.value, yearInput.value, genreInput.value] = [titleTD.textContent, authorTD.textContent, yearTD.textContent, genreTD.textContent];
+        [titleInput.value, authorInput.value, yearInput.value, genreInput.value, readInput.checked] = [titleTD.textContent, authorTD.textContent, yearTD.textContent, genreTD.textContent, readTD.querySelector("input").checked];
         dialog.showModal();
     });
 
