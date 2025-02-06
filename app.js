@@ -1,7 +1,7 @@
 const myLibrary = [
-    new Book("1984", "George Orwell", 1949, "Ficção"),
-    new Book("To Kill a Mockingbird", "Harper Lee", 1960, "Ficção"),
-    new Book("The Great Gatsby", "F. Scott Fitzgerald", 1925, "Fantasia")
+    new Book("1984", "George Orwell", 1949, "Ficção", true),
+    new Book("To Kill a Mockingbird", "Harper Lee", 1960, "Ficção", false),
+    new Book("The Great Gatsby", "F. Scott Fitzgerald", 1925, "Fantasia", false)
 ];
 
 const dialog = document.querySelector("dialog");
@@ -17,15 +17,25 @@ const genreInput = document.querySelector("#genre");
 const main = document.querySelector("main");
 const table = document.querySelector("table");
 
+// Toggle switch
+const toggle = document.querySelector('.toggle input');
+toggle.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    toggle.checked = !toggle.checked;
+    }
+});
+
 let currentRow;
 let editingBook = false;
 
 // Book constructor
-function Book(title, author, year, genre) {
+function Book(title, author, year, genre, read = false) {
     this.title = title;
     this.author = author;
     this.year = year;
     this.genre = genre;
+    this.read = read;
 };
 
 function addBookToLibrary(book) {
@@ -72,6 +82,20 @@ function generateBookRow(book) {
         td.textContent = book[prop];
         tr.appendChild(td);
     });
+
+    // Adicionar coluna read com toggle
+    const readTd = document.createElement("td");
+    const toggleLabel = document.createElement("label");
+    toggleLabel.className = "toggle";
+    toggleLabel.innerHTML = `
+        <input type="checkbox" ${book.read ? 'checked' : ''}>
+        <span class="slider"></span>
+    `;
+    toggleLabel.querySelector('input').addEventListener('change', function() {
+        book.read = this.checked;
+    });
+    readTd.appendChild(toggleLabel);
+    tr.appendChild(readTd);
 
     const actionsTd = document.createElement("td");
     const actionsDiv = document.createElement("div");
