@@ -1,7 +1,7 @@
 const myLibrary = [
-    new Book("1984", "George Orwell", 1949, "Ficção", true),
-    new Book("To Kill a Mockingbird", "Harper Lee", 1960, "Ficção", false),
-    new Book("The Great Gatsby", "F. Scott Fitzgerald", 1925, "Fantasia", false)
+    new Book("1984", "George Orwell", 1949, "Ficção", 328, true),
+    new Book("To Kill a Mockingbird", "Harper Lee", 1960, "Ficção", 281, false),
+    new Book("The Great Gatsby", "F. Scott Fitzgerald", 1925, "Fantasia", 180, false)
 ];
 
 const dialog = document.querySelector("dialog");
@@ -14,6 +14,7 @@ const titleInput = document.querySelector("#title");
 const authorInput = document.querySelector("#author");
 const yearInput = document.querySelector("#year");
 const genreInput = document.querySelector("#genre");
+const pagesInput = document.querySelector("#pages");
 const main = document.querySelector("main");
 const table = document.querySelector("table");
 const readInput = document.querySelector("#read");
@@ -31,11 +32,12 @@ let currentRow;
 let editingBook = false;
 
 // Book constructor
-function Book(title, author, year, genre, read = false) {
+function Book(title, author, year, genre, pages, read = false) {
     this.title = title;
     this.author = author;
     this.year = year;
     this.genre = genre;
+    this.pages = pages;
     this.read = read;
 };
 
@@ -78,7 +80,7 @@ function generateBookRow(book) {
     const tr = document.createElement("tr");
 
     // Create td for each property
-    ["title", "author", "year", "genre"].forEach(prop => {
+    ["title", "author", "year", "genre", "pages"].forEach(prop => {
         const td = document.createElement("td");
         td.textContent = book[prop];
         tr.appendChild(td);
@@ -108,9 +110,9 @@ function generateBookRow(book) {
     editButton.addEventListener("click", function(e) {
         editingBook = true;
         currentRow = this.closest("tr");
-        let [titleTD, authorTD, yearTD, genreTD, readTD] = currentRow.querySelectorAll("td");
+        let [titleTD, authorTD, yearTD, genreTD, pagesTD, readTD] = currentRow.querySelectorAll("td");
         // Update form according to the values of the row
-        [titleInput.value, authorInput.value, yearInput.value, genreInput.value, readInput.checked] = [titleTD.textContent, authorTD.textContent, yearTD.textContent, genreTD.textContent, readTD.querySelector("input").checked];
+        [titleInput.value, authorInput.value, yearInput.value, genreInput.value, pagesInput.value, readInput.checked] = [titleTD.textContent, authorTD.textContent, yearTD.textContent, genreTD.textContent, pagesTD.textContent, readTD.querySelector("input").checked];
         dialog.showModal();
     });
 
