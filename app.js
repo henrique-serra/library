@@ -1,7 +1,7 @@
 const myLibrary = [
-    new Book("1984", "George Orwell", 1949, "Dystopian"),
-    new Book("To Kill a Mockingbird", "Harper Lee", 1960, "Fiction"),
-    new Book("The Great Gatsby", "F. Scott Fitzgerald", 1925, "Classic")
+    new Book("1984", "George Orwell", 1949, "Ficção"),
+    new Book("To Kill a Mockingbird", "Harper Lee", 1960, "Ficção"),
+    new Book("The Great Gatsby", "F. Scott Fitzgerald", 1925, "Fantasia")
 ];
 
 const dialog = document.querySelector("dialog");
@@ -16,7 +16,9 @@ const yearInput = document.querySelector("#year");
 const genreInput = document.querySelector("#genre");
 const main = document.querySelector("main");
 const table = document.querySelector("table");
-const tbody = document.querySelector("tbody");
+
+let currentRow;
+let editingBook = false;
 
 // Book constructor
 function Book(title, author, year, genre) {
@@ -36,16 +38,21 @@ addBookBtn.addEventListener("click", () => {
     dialog.showModal();
 });
 
-confirmButton.addEventListener("click", (event) => {
+confirmButton.addEventListener("click", function(event) {
     event.preventDefault();
     let returnValue = [];
     inputs.forEach(input => {
         returnValue.push(input.value);
     });
     let newBook = new Book(...returnValue);
-    myLibrary.push(newBook);
+    if (editingBook) {
+        myLibrary.splice(currentRow.id, 1, newBook);
+    } else {
+        myLibrary.push(newBook);
+    }
+    editingBook = false;
     dialog.close(returnValue);
-    generateTable(myLibrary);
+    appendBookRowsToTBody(myLibrary);
 });
 
 // "Close" button closes the dialog
@@ -73,13 +80,24 @@ function generateBookRow(book) {
     const editButton = document.createElement("button");
     editButton.textContent = "Editar";
     editButton.classList.add("btn-primary");
+    editButton.addEventListener("click", function(e) {
+        editingBook = true;
+        currentRow = this.closest("tr");
+        let [titleTD, authorTD, yearTD, genreTD] = currentRow.querySelectorAll("td");
+        // Update form according to the values of the row
+        [titleInput.value, authorInput.value, yearInput.value, genreInput.value] = [titleTD.textContent, authorTD.textContent, yearTD.textContent, genreTD.textContent];
+        dialog.showModal();
+    });
 
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Excluir";
     deleteButton.classList.add("btn-danger");
-    deleteButton.addEventListener("click", e => {
-        myLibrary.splice(clickedRowIndex, 1);
-        generateTable(myLibrary);
+    deleteButton.addEventListener("click", function(e) {
+        let clickedRowIndex = this.closest("tr").id;
+        if (confirm("Confirm deletion?")) {
+            myLibrary.splice(clickedRowIndex, 1);
+            appendBookRowsToTBody(myLibrary);
+        }
         return
     });
 
@@ -88,32 +106,24 @@ function generateBookRow(book) {
     actionsTd.appendChild(actionsDiv);
     tr.appendChild(actionsTd);
 
-    // Create td for row index
-    const tdIndex = document.createElement("td");
-    tdIndex.textContent = tr.rowIndex;
-    tr.appendChild(tdIndex);
-
     return tr;
 }
 
-function appendBookRowsToTBody(library, tbody) {
+function appendBookRowsToTBody(library) {
+    const tbody = document.querySelector("tbody");
+    const table = tbody.parentNode;
+    tbody.remove();
+    const newTBody = document.createElement("tbody");
     library.forEach(book => {
         const bookRow = generateBookRow(book);
-        tbody.appendChild(bookRow);
+        newTBody.appendChild(bookRow);
+    });
+    table.appendChild(newTBody);
+    newTBody.querySelectorAll("tr").forEach((row, index) => {
+        row.id = index;
     });
 }
 
-let clickedRowIndex;
-document.addEventListener("click", e => {
-    const actionsDiv = e.target.closest(".actions");
-
-    if (actionsDiv) {
-        const tr = actionsDiv.closest("tr");
-        clickedRowIndex = tr.rowIndex - 1;
-        return clickedRowIndex;
-    }
-})
-
 window.addEventListener("DOMContentLoaded", e => {
-    appendBookRowsToTBody(myLibrary, tbody);
+    appendBookRowsToTBody(myLibrary);
 })
