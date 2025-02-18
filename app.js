@@ -1,3 +1,25 @@
+// Book class
+class Book {
+    constructor(title, author, year, genre, pages, read = false) {
+        this.title = title;
+        this.author = author;
+        this.year = year;
+        this.genre = genre;
+        this.pages = pages;
+        this.read = read;
+    }
+}
+
+// Book constructor
+// function Book(title, author, year, genre, pages, read = false) {
+//     this.title = title;
+//     this.author = author;
+//     this.year = year;
+//     this.genre = genre;
+//     this.pages = pages;
+//     this.read = read;
+// };
+
 const myLibrary = [
     new Book("1984", "George Orwell", 1949, "Ficção", 328, true),
     new Book("To Kill a Mockingbird", "Harper Lee", 1960, "Ficção", 281, false),
@@ -30,16 +52,6 @@ toggle.addEventListener('keydown', (e) => {
 
 let currentRow;
 let editingBook = false;
-
-// Book constructor
-function Book(title, author, year, genre, pages, read = false) {
-    this.title = title;
-    this.author = author;
-    this.year = year;
-    this.genre = genre;
-    this.pages = pages;
-    this.read = read;
-};
 
 function addBookToLibrary(book) {
     myLibrary.push(book);
